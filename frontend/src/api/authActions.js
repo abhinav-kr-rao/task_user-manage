@@ -2,7 +2,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000/api/auth";
 
 // --- ACTION 1: LOGIN ---
 export const loginAction = async (email, password) => {
