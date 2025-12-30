@@ -82,48 +82,60 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("printing email, password: ", email, " ", password);
+
   try {
-    // 1. Find User
+    console.log("email type", typeof email);
+
+    // console.log(
+    //   await db.query("SELECT * FROM users WHERE email = $1", [email])
+    // );
+
     const userQuery = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-    if (userQuery.rows.length === 0) {
+
+    // console.log(userQuery);
+    const userRow = userQuery.rows;
+    console.log("printing a", userRow.length);
+
+    if (userRow.length === 0) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
-    const user = userQuery.rows[0];
 
-    
-    // console.log("logging db rows");
+    console.log("userrow[0]");
 
-    // console.log(db.rows);
+    const user = userRow[0];
+    console.log(user);
 
-    // console.log(userExist);
+    const stored_password = user.password_hash;
 
-    // console.log("logging userrows");
-
-    // console.log(userExist.rows);
+    console.log("password is ", stored_password);
 
     // 2. Verify Password [cite: 41]
-    const validPass = await bcrypt.compare(password, user.password_hash);
+    const validPass = await bcrypt.compare(password, stored_password);
     if (!validPass) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
     // 3. Check Status (Active/Inactive)
-    if (user.status !== "active") {
+    const user_Status = user.status;
+    if (user_Status !== "active") {
       return res
         .status(403)
         .json({ error: "Account is deactivated. Contact admin." });
     }
 
     // 4. Update Last Login [cite: 123]
+    const userId = user.id;
+    const userRole = user.role;
     await db.query("UPDATE users SET last_login = NOW() WHERE id = $1", [
-      user.id,
+      userId,
     ]);
 
     // 5. Generate Token
     const token = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: userId, role: userRole },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -138,6 +150,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log("error logging in ", err);
+
     res.status(500).json({ error: err.message });
   }
 };

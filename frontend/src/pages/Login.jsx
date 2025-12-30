@@ -22,14 +22,15 @@ export default function Login() {
 
             const data = await response.json();
 
+            console.log(data);
+
+
             if (!response.ok) {
                 throw new Error(data.error || 'Login failed');
             }
 
-            // Call context login function
             login(data.token);
 
-            // Redirect based on role or to dashboard [cite: 66]
             navigate('/dashboard');
         } catch (err) {
             setError(err.message);
