@@ -39,11 +39,11 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const Login = async (token) => {
-    console.log("AuthContext received:", { token });
+  const Login = async (email, password) => {
+    console.log("AuthContext Login called with:", { email, password });
 
-    if (!email) {
-      return { success: false, error: "Missing credentials" };
+    if (!email || !password) {
+      return { success: false, error: "Email and password are required" };
     }
 
     // Pass data to the Action

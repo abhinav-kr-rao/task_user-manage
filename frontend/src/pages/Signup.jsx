@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+import { signupAction } from '../api/authActions';
+
 export default function Signup() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -33,8 +35,6 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target);
-
         setError('');
 
         const validationError = validate();
@@ -45,31 +45,21 @@ export default function Signup() {
 
         setLoading(true);
         try {
-            console.log('inside try');
-
-            console.log(typeof(formData.password));
-
-
-            const res = await fetch('http://localhost:5000/api/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    full_name: formData.full_name,
-                    email: formData.email,
-                    password: formData.password
-                }),
+            // Use the centralized signup action
+            const result = await signupAction({
+                full_name: formData.full_name,
+                email: formData.email,
+                password: formData.password
             });
 
-
-
-            const data = await res.json();
-            console.log('result got ', data);
-            if (!res.ok) throw new Error(data.error || 'Signup failed');
-
-            alert('Account created! Please login.');
-            navigate('/login');
+            if (result.success) {
+                alert('Account created! Please login.');
+                navigate('/login');
+            } else {
+                setError(result.error || 'Signup failed');
+            }
         } catch (err) {
-            setError(err.message);
+            setError('An unexpected error occurred'.concat(err));
         } finally {
             setLoading(false);
         }

@@ -3,8 +3,11 @@ import jwt from "jsonwebtoken";
 const verifyToken = (req, res, next) => {
   console.log("\t\t\tin  middleware");
 
-  // Check for token in "Authorization: Bearer <token>"
+  console.log("req is ", req.headers);
+
   const authHeader = req.headers["authorization"];
+  console.log("authheader is ", authHeader);
+
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {

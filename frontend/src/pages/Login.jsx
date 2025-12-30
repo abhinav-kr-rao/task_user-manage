@@ -14,31 +14,18 @@ export default function Login() {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
+            // Use the login function from AuthContext directly
+            // It handles the API call and state update
+            const result = await login(email, password);
 
-            const data = await response.json();
-
-            console.log('res in json (data) is ', data);
-
-            console.log('response is ', response);
-
-
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+            if (result.success) {
+                navigate('/dashboard');
+            } else {
+                setError(result.error || 'Login failed');
             }
-
-            await login(data.token);
-
-            navigate('/dashboard');
         } catch (err) {
-            console.log('error in login comp');
-
-            setError(err.message);
+            console.log('error in login comp', err);
+            setError('An unexpected error occurred');
         }
     };
 

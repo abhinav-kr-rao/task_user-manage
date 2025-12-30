@@ -14,17 +14,25 @@ export default function Dashboard() {
 
     const fetchProfile = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/users/me');
+            const token = localStorage.getItem('token');
+            const res = await axios.get('http://localhost:5000/api/users/me', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setProfile(res.data);
             setFormData({ full_name: res.data.full_name, email: res.data.email });
         } catch (err) {
+            console.log('error getting profile', err);
+
             console.error(err);
         }
     };
 
     const handleUpdate = async () => {
         try {
-            await axios.put('http://localhost:5000/api/users/me', formData);
+            const token = localStorage.getItem('token');
+            await axios.put('http://localhost:5000/api/users/me', formData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             setIsEditing(false);
             fetchProfile(); // Refresh data
             alert('Profile updated successfully');
