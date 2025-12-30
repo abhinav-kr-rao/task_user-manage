@@ -15,7 +15,12 @@ export default function Dashboard() {
             const res = await axios.get('http://localhost:5000/api/users/me', {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            console.log('res in dashboard is ', res);
+
             setProfile(res.data);
+
+
             setFormData({ full_name: res.data.full_name, email: res.data.email });
         } catch (err) {
             console.log('error getting profile', err);
@@ -30,6 +35,9 @@ export default function Dashboard() {
             await fetchProfile();
         }
         fun();
+
+        console.log("profile is", profile);
+
     }, []);
     const handleUpdate = async () => {
         try {
@@ -43,7 +51,6 @@ export default function Dashboard() {
         } catch (err) {
             alert('Failed to update profile');
             console.log(err);
-
         }
     };
 

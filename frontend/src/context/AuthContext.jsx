@@ -42,7 +42,6 @@ const AuthProvider = ({ children }) => {
       return { success: false, error: "Email and password are required" };
     }
 
-    // Pass data to the Action
     const result = await loginAction(email, password);
 
     if (result.success) {
