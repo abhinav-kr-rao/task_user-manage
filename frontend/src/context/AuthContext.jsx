@@ -8,21 +8,18 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const performLogout = () => {
+    logoutAction();
+    setUser(null);
+  };
+
   // Initialize State on Load
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log('toekn is in usefect context', token);
-    // const decoded = jwtDecode(token);
-    // console.log('decoed tokwn ', decoded);
-
-    const performLogout = () => {
-      logoutAction();
-      setUser(null);
-    };
 
     if (token) {
       try {
-
         const decoded = jwtDecode(token);
         console.log('decoed tokwn ', decoded);
         if (decoded.exp * 1000 < Date.now()) {
@@ -32,7 +29,6 @@ const AuthProvider = ({ children }) => {
         }
       } catch (e) {
         console.log('error in useffect ', e);
-
         performLogout();
       }
     }

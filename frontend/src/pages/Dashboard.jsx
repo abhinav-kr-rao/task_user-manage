@@ -8,9 +8,6 @@ export default function Dashboard() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({ full_name: '', email: '' });
 
-    useEffect(() => {
-        fetchProfile();
-    }, []);
 
     const fetchProfile = async () => {
         try {
@@ -27,6 +24,13 @@ export default function Dashboard() {
         }
     };
 
+    useEffect(() => {
+
+        const fun = async () => {
+            await fetchProfile();
+        }
+        fun();
+    }, []);
     const handleUpdate = async () => {
         try {
             const token = localStorage.getItem('token');
