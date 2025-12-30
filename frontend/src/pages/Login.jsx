@@ -24,6 +24,9 @@ export default function Login() {
 
             console.log(data);
 
+            console.log('response is ', response);
+
+
 
             if (!response.ok) {
                 throw new Error(data.error || 'Login failed');

@@ -2,24 +2,30 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:5000/api/auth";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 // --- ACTION 1: LOGIN ---
 export const loginAction = async (email, password) => {
   try {
-    const res = await axios.post(`${API_URL}/login`, { email, password });
+    console.log("trying to login");
+    const res = await axios.post(`${BASE_URL}/login`, { email, password });
+
+    console.log("response in authActions is ", res);
 
     if (res.data.token) {
-      // Save to LocalStorage here (Clean Separation)
       localStorage.setItem("token", res.data.token);
 
-      // Decode and return the user data so React can use it
       const decoded = jwtDecode(res.data.token);
+
+      console.log("login successful");
+
       return { success: true, user: decoded };
     }
 
     return { success: false, error: "No token received" };
   } catch (err) {
+    console.log("error log in", err);
+
     return {
       success: false,
       error: err.response?.data?.error || "Login failed",
@@ -32,7 +38,7 @@ export const signupAction = async (formData) => {
   try {
     console.log("Trying to singup");
 
-    const res = await axios.post(`${API_URL}/signup`, formData);
+    const res = await axios.post(`${BASE_URL}/signup`, formData);
     console.log("receives ", res);
 
     return { success: true, data: res.data };

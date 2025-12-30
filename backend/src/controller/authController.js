@@ -82,10 +82,10 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("printing email, password: ", email, " ", password);
+  //   console.log("printing email, password: ", email, " ", password);
 
   try {
-    console.log("email type", typeof email);
+    // console.log("email type", typeof email);
 
     // console.log(
     //   await db.query("SELECT * FROM users WHERE email = $1", [email])
@@ -97,23 +97,24 @@ export const login = async (req, res) => {
 
     // console.log(userQuery);
     const userRow = userQuery.rows;
-    console.log("printing a", userRow.length);
+    // console.log("printing a", userRow.length);
 
     if (userRow.length === 0) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    console.log("userrow[0]");
+    // console.log("userrow[0]");
 
     const user = userRow[0];
-    console.log(user);
+    // console.log(user);
 
     const stored_password = user.password_hash;
 
-    console.log("password is ", stored_password);
+    // console.log("password is ", stored_password);
 
     // 2. Verify Password [cite: 41]
     const validPass = await bcrypt.compare(password, stored_password);
+    // console.log(validPass);
     if (!validPass) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
@@ -126,15 +127,24 @@ export const login = async (req, res) => {
         .json({ error: "Account is deactivated. Contact admin." });
     }
 
-    // 4. Update Last Login [cite: 123]
+    // Updating Last Login
     const userId = user.id;
     const userRole = user.role;
+    // console.log("last login is", user.last_login.toLocaleString());
+
+    // console.log("user id is", userId);
+
+    // console.log(
+    //   await db.query("UPDATE users SET last_login = NOW() WHERE id = $1", [
+    //     userId,
+    //   ])
+    // );
+
     await db.query("UPDATE users SET last_login = NOW() WHERE id = $1", [
       userId,
     ]);
 
-    // 5. Generate Token
-    const token = jwt.sign(
+    const token = await jwt.sign(
       { id: userId, role: userRole },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
@@ -143,14 +153,14 @@ export const login = async (req, res) => {
     res.json({
       token,
       user: {
-        id: user.id,
+        id: userId,
         full_name: user.full_name,
         email: user.email,
         role: user.role,
       },
     });
   } catch (err) {
-    console.log("error logging in ", err);
+    // console.log("error logging in ", err);
 
     res.status(500).json({ error: err.message });
   }
