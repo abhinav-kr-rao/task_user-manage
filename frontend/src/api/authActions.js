@@ -7,13 +7,25 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 // --- ACTION 1: LOGIN ---
 export const loginAction = async (email, password) => {
   try {
-    console.log("trying to login");
-    const res = await axios.post(`${BASE_URL}/login`, { email, password });
+    console.log(
+      "trying to login with email : ",
+      email,
+      "  password- ",
+      password
+    );
+    const res = await axios.post(`${BASE_URL}/login`, {
+      email,
+      password,
+    });
 
-    console.log("response in authActions is ", res);
+    // console.log("response in loginAction is ", res);
+    const currToken = res;
+    console.log("tying to get token is", currToken);
 
     if (res.data.token) {
       localStorage.setItem("token", res.data.token);
+
+      console.log("token", res.data.token);
 
       const decoded = jwtDecode(res.data.token);
 
@@ -22,9 +34,11 @@ export const loginAction = async (email, password) => {
       return { success: true, user: decoded };
     }
 
+    console.log("error in loginAction");
+
     return { success: false, error: "No token received" };
   } catch (err) {
-    console.log("error log in", err);
+    console.log("error log in authActions", err);
 
     return {
       success: false,

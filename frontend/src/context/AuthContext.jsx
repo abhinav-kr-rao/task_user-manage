@@ -11,27 +11,44 @@ const AuthProvider = ({ children }) => {
   // Initialize State on Load
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log('toekn is in usefect context', token);
+    // const decoded = jwtDecode(token);
+    // console.log('decoed tokwn ', decoded);
+
+    const performLogout = () => {
+      logoutAction();
+      setUser(null);
+    };
+
     if (token) {
       try {
+
         const decoded = jwtDecode(token);
+        console.log('decoed tokwn ', decoded);
         if (decoded.exp * 1000 < Date.now()) {
           performLogout();
         } else {
           setUser(decoded);
         }
       } catch (e) {
+        console.log('error in useffect ', e);
+
         performLogout();
       }
     }
     setLoading(false);
   }, []);
 
-  // --- WRAPPER FUNCTION FOR LOGIN ---
-  const performLogin = async (email, password) => {
-    // 1. Call the Action
+  const Login = async (token) => {
+    console.log("AuthContext received:", { token });
+
+    if (!email) {
+      return { success: false, error: "Missing credentials" };
+    }
+
+    // Pass data to the Action
     const result = await loginAction(email, password);
 
-    // 2. Update React State if successful
     if (result.success) {
       setUser(result.user);
       return { success: true };
@@ -40,24 +57,17 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // --- WRAPPER FUNCTION FOR LOGOUT ---
-  const performLogout = () => {
-    // 1. Call the Action (clears localStorage)
-    logoutAction();
-
-    // 2. Update React State (clears UI)
-    setUser(null);
-
-    // 3. Redirect
-    window.location.href = "/login";
+  const Logout = () => {
+    performLogout();
+    window.location.href = '/login';
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        login: performLogin,
-        logout: performLogout,
+        login: Login,
+        logout: Logout,
         loading,
       }}
     >

@@ -80,7 +80,10 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  //   console.log(req.body);
+
+  const email = req.body.email;
+  const password = req.body.password;
 
   //   console.log("printing email, password: ", email, " ", password);
 
@@ -103,23 +106,22 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // console.log("userrow[0]");
-
     const user = userRow[0];
+    // console.log("userrow[0]");
     // console.log(user);
 
     const stored_password = user.password_hash;
 
     // console.log("password is ", stored_password);
 
-    // 2. Verify Password [cite: 41]
+    //  Verify Password
     const validPass = await bcrypt.compare(password, stored_password);
-    // console.log(validPass);
+    console.log(validPass);
     if (!validPass) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // 3. Check Status (Active/Inactive)
+    // Check Status (Active/Inactive)
     const user_Status = user.status;
     if (user_Status !== "active") {
       return res
@@ -149,6 +151,8 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
+
+    // console.log("login success from backend");
 
     res.json({
       token,

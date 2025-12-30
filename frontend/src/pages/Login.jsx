@@ -22,7 +22,7 @@ export default function Login() {
 
             const data = await response.json();
 
-            console.log(data);
+            console.log('res in json (data) is ', data);
 
             console.log('response is ', response);
 
@@ -32,10 +32,12 @@ export default function Login() {
                 throw new Error(data.error || 'Login failed');
             }
 
-            login(data.token);
+            await login(data.token);
 
             navigate('/dashboard');
         } catch (err) {
+            console.log('error in login comp');
+
             setError(err.message);
         }
     };
