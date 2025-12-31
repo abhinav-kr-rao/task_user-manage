@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 
-const BASE_URL = import.meta.VITE_BASE_URL
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
 
 export default function Dashboard() {
     const { logout } = useAuth();
@@ -19,7 +19,7 @@ export default function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            // console.log('res in dashboard is ', res);
+            console.log('res in dashboard is ', res);
 
             setProfile(res.data);
 

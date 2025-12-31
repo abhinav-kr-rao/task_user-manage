@@ -12,7 +12,7 @@ export const loginAction = async (email, password) => {
     //   "  password- ",
     //   password
     // );
-    const res = await axios.post(`${BASE_URL}/api/login`, {
+    const res = await axios.post(`${BASE_URL}/api/auth/login`, {
       email,
       password,
     });
@@ -50,7 +50,7 @@ export const signupAction = async (formData) => {
   try {
     // console.log("Trying to singup");
 
-    const res = await axios.post(`${BASE_URL}/signup`, formData);
+    const res = await axios.post(`${BASE_URL}/api/auth/signup`, formData);
     // console.log("receives ", res);
 
     return { success: true, data: res.data };

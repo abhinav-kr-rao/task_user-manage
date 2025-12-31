@@ -14,8 +14,6 @@ export default function Login() {
         setError('');
 
         try {
-            // Use the login function from AuthContext directly
-            // It handles the API call and state update
             const result = await login(email, password);
 
             if (result.success) {

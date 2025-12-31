@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const BASE_URL = import.meta.VITE_BASE_URL
+// FIX: Correct env access and fallback
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
 
 export default function AdminPanel() {
     const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ export default function AdminPanel() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`${BASE_URL}/ api / users ? page = ${page} & limit=10`, {
+            const res = await axios.get(`${BASE_URL}/api/users?page=${page}&limit=10`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(res.data.users);
