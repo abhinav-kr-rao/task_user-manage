@@ -1,7 +1,7 @@
 const isAdmin = (req, res, next) => {
-  console.log("printing request ", req);
+  // console.log("printing request ", req);
 
-  console.log("in admin middle");
+  // console.log("in admin middle");
 
   if (req.user && req.user.role === "admin") {
     next();

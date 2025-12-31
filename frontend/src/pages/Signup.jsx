@@ -14,7 +14,6 @@ export default function Signup() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Validation Logic
     const validate = () => {
         if (!formData.full_name || !formData.email || !formData.password) {
             return "All fields are required";
@@ -25,7 +24,6 @@ export default function Signup() {
         if (formData.password !== formData.confirmPassword) {
             return "Passwords do not match";
         }
-        // Simple email regex
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
             return "Invalid email format";
@@ -45,7 +43,6 @@ export default function Signup() {
 
         setLoading(true);
         try {
-            // Use the centralized signup action
             const result = await signupAction({
                 full_name: formData.full_name,
                 email: formData.email,

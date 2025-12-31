@@ -16,12 +16,12 @@ const AuthProvider = ({ children }) => {
   // Initialize State on Load
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log('toekn is in usefect context', token);
+    // console.log('toekn is in usefect context', token);
 
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log('decoed tokwn ', decoded);
+        // console.log('decoed tokwn ', decoded);
         if (decoded.exp * 1000 < Date.now()) {
           performLogout();
         } else {
@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const Login = async (email, password) => {
-    console.log("AuthContext Login called with:", { email, password });
+    // console.log("AuthContext Login called with:", { email, password });
 
     if (!email || !password) {
       return { success: false, error: "Email and password are required" };

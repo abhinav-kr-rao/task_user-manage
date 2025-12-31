@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const BASE_URL = import.meta.VITE_BASE_URL
+
 export default function AdminPanel() {
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(1);
@@ -11,7 +13,7 @@ export default function AdminPanel() {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/users?page=${page}&limit=10`, {
+            const res = await axios.get(`${BASE_URL}/ api / users ? page = ${page} & limit=10`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(res.data.users);
@@ -26,11 +28,11 @@ export default function AdminPanel() {
 
     const toggleStatus = async (id, currentStatus) => {
         const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-        if (!window.confirm(`Are you sure you want to make user ${newStatus}?`)) return;
+        if (!window.confirm(`Are you sure you want to make user ${newStatus} ? `)) return;
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/users/${id}/status`,
+            await axios.put(`${BASE_URL}/api/users/${id}/status`,
                 { status: newStatus },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

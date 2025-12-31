@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
+
+const BASE_URL = import.meta.VITE_BASE_URL
+
 export default function Dashboard() {
     const { logout } = useAuth();
     const [profile, setProfile] = useState(null);
@@ -12,11 +15,11 @@ export default function Dashboard() {
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/users/me', {
+            const res = await axios.get(`${BASE_URL}/api/users/me`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            console.log('res in dashboard is ', res);
+            // console.log('res in dashboard is ', res);
 
             setProfile(res.data);
 
@@ -36,13 +39,13 @@ export default function Dashboard() {
         }
         fun();
 
-        console.log("profile is", profile);
+        // console.log("profile is", profile);
 
     }, []);
     const handleUpdate = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://localhost:5000/api/users/me', formData, {
+            await axios.put(`${BASE_URL}/api/users/me`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setIsEditing(false);
