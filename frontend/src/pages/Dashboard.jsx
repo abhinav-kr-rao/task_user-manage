@@ -19,7 +19,7 @@ export default function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            console.log('res in dashboard is ', res);
+            // console.log('res in dashboard is ', res);
 
             setProfile(res.data);
 
